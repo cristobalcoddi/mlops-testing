@@ -8,7 +8,7 @@ variables:
   ap_vm_image: ubuntu-20.04
   #Note: A namespace with many characters will cause storage account creation to fail due to storage account names having a limit of 24 characters.
   namespace: mlops # Namespace for the resources
-  postfix: test # Postfix for the resources
+  postfix: test01 # Postfix for the resources
   location: eastus # Location for the resources
   deployment_name: taxitest # Deployment name for the resources 
 
