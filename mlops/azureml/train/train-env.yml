@@ -1,5 +1,5 @@
 $schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
-name: {{deployment_name}}-train-env  # Asegúrate de que la interpolación sea válida
+name: ${{ needs.get-config.outputs.deployment_name }}-train-env  # Asegúrate de que la interpolación sea válida
 image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04
 conda_file: ../../../data-science/environment/train-conda.yml
 description: Environment created from a Docker image plus Conda environment to train model.
