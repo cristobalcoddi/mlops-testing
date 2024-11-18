@@ -1,4 +1,4 @@
-name: model-training-pipeline # test1
+name: model-training-pipeline # test2
 
 on: 
   push:
