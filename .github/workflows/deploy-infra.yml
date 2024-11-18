@@ -1,4 +1,4 @@
-name: deploy-infra # test 2
+name: deploy-infra # test2
 
 on:
   push:
