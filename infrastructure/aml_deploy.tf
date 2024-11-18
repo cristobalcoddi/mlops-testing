@@ -32,6 +32,8 @@ module "aml_workspace" {
   enable_aml_computecluster = var.enable_aml_computecluster
   storage_account_name      = module.storage_account_aml.name
 
+  deployment_name = var.deployment_name
+
   tags = local.tags
 }
 
