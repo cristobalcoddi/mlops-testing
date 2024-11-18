@@ -49,9 +49,9 @@ module "storage_account_aml" {
   postfix = var.postfix
   env = var.environment
 
-  hns_enabled                         = false
-  firewall_bypass                     = ["AzureServices"]
-  firewall_virtual_network_subnet_ids = []
+  hns_enabled = false
+
+  deployment_name = var.deployment_name  # Agrega esta línea
 
   tags = local.tags
 }
@@ -68,6 +68,8 @@ module "key_vault" {
   postfix = var.postfix
   env = var.environment
 
+  deployment_name = var.deployment_name  # Agrega esta línea
+
   tags = local.tags
 }
 
@@ -82,6 +84,8 @@ module "application_insights" {
   prefix  = var.prefix
   postfix = var.postfix
   env = var.environment
+
+  deployment_name = var.deployment_name  # Agrega esta línea
 
   tags = local.tags
 }
@@ -98,6 +102,8 @@ module "container_registry" {
   postfix = var.postfix
   env = var.environment
 
+  deployment_name = var.deployment_name  # Agrega esta línea
+
   tags = local.tags
 }
 
@@ -112,6 +118,8 @@ module "data_explorer" {
   env = var.environment
   key_vault_id      = module.key_vault.id
   enable_monitoring = var.enable_monitoring
+
+  deployment_name = var.deployment_name  # Agrega esta línea
 
   client_secret = var.client_secret
 
