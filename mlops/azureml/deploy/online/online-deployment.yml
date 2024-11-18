@@ -1,0 +1,10 @@
+$schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
+name: blue
+endpoint_name: ${{parent.inputs.deployment_name}}-online
+model: azureml:${{parent.inputs.deployment_name}}-model@latest
+instance_type: Standard_DS2_v2
+instance_count: 1
+liveness_probe:
+  failure_threshold: 30  # Número de intentos antes de declarar fallo
+  timeout: 10           # Tiempo de espera en segundos
+  period: 20            # Intervalo entre pruebas en segundos
