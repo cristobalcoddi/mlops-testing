@@ -47,6 +47,7 @@ jobs:
         max_instances: 4
         cluster_tier: dedicated
         resource_group: ${{ needs.get-config.outputs.resource_group }}
-        workspace_name: ${{ needs.get-config.outputs.aml_workspace }}     
+        workspace_name: ${{ needs.get-config.outputs.aml_workspace }}
+        deployment_name: ${{ needs.get-config.outputs.deployment_name }}     
       secrets:
           creds: ${{secrets.AZURE_CREDENTIALS}}
