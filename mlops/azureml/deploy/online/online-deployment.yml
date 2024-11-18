@@ -1,7 +1,7 @@
 $schema: https://azuremlschemas.azureedge.net/latest/managedOnlineDeployment.schema.json
 name: blue
-endpoint_name: ${{parent.inputs.deployment_name}}-online
-model: azureml:${{parent.inputs.deployment_name}}-model@latest
+endpoint_name: ${{parent.inputs.deployment_name}}-online # This has to be edited manually
+model: azureml:${{parent.inputs.deployment_name}}-model@latest # This has to be edited manually
 instance_type: Standard_DS2_v2
 instance_count: 1
 liveness_probe:

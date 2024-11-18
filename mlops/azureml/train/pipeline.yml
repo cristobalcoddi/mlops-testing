@@ -1,13 +1,13 @@
 $schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
 type: pipeline
-experiment_name: ${deployment_name}-training
+experiment_name: ${{parent.inputs.deployment_name}}-training
 description: Training Pipeline to train a model
 inputs:
   input:
     type: uri_file
-    path: azureml:${deployment_name}-data@latest
+    path: azureml:${{parent.inputs.deployment_name}}-data@latest
   enable_monitoring: 'false'
-  table_name: '${deployment_name}monitoring'
+  table_name: '${{parent.inputs.deployment_name}}monitoring'
 outputs: 
   train_data:
   val_data:
@@ -31,7 +31,7 @@ jobs:
       --val_data ${{outputs.val_data}}
       --test_data ${{outputs.test_data}}
       --enable_monitoring ${{inputs.enable_monitoring}}
-    environment: azureml:${deployment_name}-train-env@latest
+    environment: azureml:${{parent.inputs.deployment_name}}-train-env@latest
   train_model:
     name: train_model
     display_name: train-model
@@ -40,7 +40,7 @@ jobs:
       python train.py 
       --train_data ${{inputs.train_data}} 
       --model_output ${{outputs.model_output}}
-    environment: azureml:${deployment_name}-train-env@latest
+    environment: azureml:${{parent.inputs.deployment_name}}-train-env@latest
     inputs:
       train_data: ${{parent.jobs.prep_data.outputs.train_data}}
     outputs:
@@ -55,9 +55,9 @@ jobs:
       --model_input ${{inputs.model_input}} 
       --test_data ${{inputs.test_data}} 
       --evaluation_output ${{outputs.evaluation_output}}
-    environment: azureml:${deployment_name}-train-env@latest
+    environment: azureml:${{parent.inputs.deployment_name}}-train-env@latest
     inputs:
-      model_name: "${deployment_name}-model"
+      model_name: "${{parent.inputs.deployment_name}}-model"
       model_input: ${{parent.jobs.train_model.outputs.model_output}}
       test_data: ${{parent.jobs.prep_data.outputs.test_data}}
     outputs:
@@ -72,9 +72,9 @@ jobs:
       --model_path ${{inputs.model_path}} 
       --evaluation_output ${{inputs.evaluation_output}}
       --model_info_output_path ${{outputs.model_info_output_path}}
-    environment: azureml:${deployment_name}-train-env@latest
+    environment: azureml:${{parent.inputs.deployment_name}}-train-env@latest
     inputs:
-      model_name: "${deployment_name}-model"
+      model_name: "${{parent.inputs.deployment_name}}-model"
       model_path: ${{parent.jobs.train_model.outputs.model_output}}
       evaluation_output: ${{parent.jobs.evaluate_model.outputs.evaluation_output}}
     outputs:

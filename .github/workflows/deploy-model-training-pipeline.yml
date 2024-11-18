@@ -1,4 +1,4 @@
-name: model-training-pipeline # test3
+name: model-training-pipeline
 
 on: 
   push:
@@ -10,16 +10,15 @@ on:
 
 jobs:
   get-config:
-      uses: ./.github/workflows/read-yaml.yml
+      uses: Azure/mlops-templates/.github/workflows/read-yaml.yml@main
       with:
         file_name: config-infra-prod.yml
   register-environment:
       needs: get-config
-      uses: ./.github/workflows/register-environment.yml
+      uses: Azure/mlops-templates/.github/workflows/register-environment.yml@main
       with:
         resource_group: ${{ needs.get-config.outputs.resource_group }}
-        workspace_name: ${{ needs.get-config.outputs.aml_workspace }}
-        deployment_name: ${{ needs.get-config.outputs.deployment_name }}     
+        workspace_name: ${{ needs.get-config.outputs.aml_workspace }}     
         environment_file:  mlops/azureml/train/train-env.yml
         conda_file: data-science/environment/train-conda.yml
       secrets:
@@ -27,11 +26,10 @@ jobs:
           
   register-dataset:
     needs: get-config
-    uses: ./.github/workflows/register-dataset.yml
+    uses: Azure/mlops-templates/.github/workflows/register-dataset.yml@main
     with:
       resource_group: ${{ needs.get-config.outputs.resource_group }}
       workspace_name: ${{ needs.get-config.outputs.aml_workspace }}
-      deployment_name: ${{ needs.get-config.outputs.deployment_name }}
       name: taxi-data
       data_file: mlops/azureml/train/data.yml
     secrets:
@@ -39,7 +37,7 @@ jobs:
       
   create-compute:
       needs: [get-config,register-environment,register-dataset]
-      uses: ./.github/workflows/create-compute.yml
+      uses: Azure/mlops-templates/.github/workflows/create-compute.yml@main
       with:
         cluster_name: cpu-cluster
         size: Standard_D2_v2
@@ -47,7 +45,28 @@ jobs:
         max_instances: 4
         cluster_tier: dedicated
         resource_group: ${{ needs.get-config.outputs.resource_group }}
-        workspace_name: ${{ needs.get-config.outputs.aml_workspace }}
-        deployment_name: ${{ needs.get-config.outputs.deployment_name }}     
+        workspace_name: ${{ needs.get-config.outputs.aml_workspace }}     
       secrets:
           creds: ${{secrets.AZURE_CREDENTIALS}}
+      
+  run-pipeline:
+      needs: [get-config,register-environment,create-compute,register-dataset]
+      uses: Azure/mlops-templates/.github/workflows/run-pipeline.yml@main
+      with:
+        resource_group: ${{ needs.get-config.outputs.resource_group }}
+        workspace_name: ${{ needs.get-config.outputs.aml_workspace }}     
+        parameters-file:  mlops/azureml/train/pipeline.yml
+        job-name: test
+      secrets:
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+  notify-deploy:
+    needs: run-pipeline
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger deploy-batch-endpoint-pipeline # Edit the user and repo
+      run: |
+        curl -X POST \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
+          https://api.github.com/repos/cristobalcoddi/mlops-testing/dispatches \ 
+          -d '{"event_type":"train_pipeline_completed"}'

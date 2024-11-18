@@ -1,4 +1,4 @@
 $schema: https://azuremlschemas.azureedge.net/latest/managedOnlineEndpoint.schema.json
-name: ${{parent.inputs.deployment_name}}-online
-description: online endpoint
+name: ${{parent.inputs.deployment_name}}-online # This has to be edited manually
+description: online endpoint # This has to be edited manually
 auth_mode: key

@@ -1,14 +1,14 @@
 $schema: https://azuremlschemas.azureedge.net/latest/batchDeployment.schema.json
 name: batch-dp
-endpoint_name: ${{parent.inputs.deployment_name}}-batch
-model: azureml:${{parent.inputs.deployment_name}}-model@latest
-compute: azureml:${{parent.inputs.deployment_name}}-cluster
+endpoint_name: ${{parent.inputs.deployment_name}}-batch # This has to be edited manually
+model: azureml:${{parent.inputs.deployment_name}}-model@latest # This has to be edited manually
+compute: azureml:${{parent.inputs.deployment_name}}-cluster # This has to be edited manually
 resources:
   instance_count: 1
 max_concurrency_per_instance: 2
 mini_batch_size: 10
 output_action: append_row
-output_file_name: predictions.csv
+output_file_name: predictions.csv # This has to be edited manually
 retry_settings:
   max_retries: 3
   timeout: 30
