@@ -21,6 +21,7 @@ jobs:
         workspace_name: ${{ needs.get-config.outputs.aml_workspace }}     
         environment_file:  mlops/azureml/train/train-env.yml
         conda_file: data-science/environment/train-conda.yml
+        deployment_name: ${{ needs.get-config.outputs.deployment_name }}
       secrets:
           creds: ${{secrets.AZURE_CREDENTIALS}}
           
@@ -32,6 +33,7 @@ jobs:
       workspace_name: ${{ needs.get-config.outputs.aml_workspace }}
       name: taxi-data
       data_file: mlops/azureml/train/data.yml
+      deployment_name: ${{ needs.get-config.outputs.deployment_name }}
     secrets:
       creds: ${{secrets.AZURE_CREDENTIALS}}
       
