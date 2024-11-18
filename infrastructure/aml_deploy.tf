@@ -9,6 +9,8 @@ module "resource_group" {
   postfix = var.postfix
   env = var.environment
 
+  deployment_name = var.deployment_name
+
   tags = local.tags
 }
 
